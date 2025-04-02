@@ -32,6 +32,7 @@ import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import jenkins.util.JSONSignatureValidator;
 import jp.ikedam.jenkins.plugins.updatesitesmanager.internal.ExtendedCertJsonSignValidator;
@@ -139,14 +140,13 @@ public class ManagedUpdateSite extends DescribedUpdateSite {
      *
      * @return JSONSignatureValidator object with additional cert as anchor if enabled
      */
-    @Deprecated
     @Nonnull
     @Override
-    protected JSONSignatureValidator getJsonSignatureValidator() {
+    protected JSONSignatureValidator getJsonSignatureValidator(@CheckForNull String name) {
         if (isUseCaCertificate()) {
-            return new ExtendedCertJsonSignValidator(getId(), getCaCertificate());
+            return new ExtendedCertJsonSignValidator(name, getCaCertificate());
         } else {
-            return super.getJsonSignatureValidator();
+            return super.getJsonSignatureValidator(name);
         }
     }
 
